@@ -1,21 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { useColorScheme } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
+import { useAssets } from "expo-asset";
+import { NavigationContainer } from "@react-navigation/native";
+import Root from "./navigation/Root";
+import { darkTheme, lightTheme } from "./styled";
+import { ThemeProvider } from "styled-components";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
 
 export default function App() {
+  const [assets] = useAssets([require("./yoda_sleep.jpeg")]);
+  const [fonts] = Font.useFonts(Ionicons.font);
+
+  const isDark = useColorScheme() === "dark";
+
+  if (assets && fonts) {
+    SplashScreen.hideAsync();
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <NavigationContainer>
+          <Root />
+        </NavigationContainer>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
