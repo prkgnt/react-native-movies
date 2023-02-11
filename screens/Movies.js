@@ -60,7 +60,6 @@ const Movies = () => {
   const onRefresh = () => {
     queryClient.refetchQueries(["movies"]);
   };
-
   const renderVMedia = ({ item }) => (
     <VMedia
       backdrop_path={item.backdrop_path}
