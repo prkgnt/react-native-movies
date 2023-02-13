@@ -1,20 +1,15 @@
-import React, { useState } from "react";
-import { ActivityIndicator, Dimensions, FlatList, View } from "react-native";
+import React from "react";
+import { Dimensions, FlatList, View } from "react-native";
 import Swiper from "react-native-swiper";
 import { useQuery, useQueryClient } from "react-query";
 import styled from "styled-components/native";
 import { moviesApi } from "../api";
 import HMedia from "../components/HMedia";
+import Loader from "../components/loader";
 import Slide from "../components/slide";
 import VMedia from "../components/VMedia";
 
 const ListContainer = styled.View``;
-
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
 
 const TrendingScroll = styled.FlatList``;
 
@@ -77,9 +72,7 @@ const Movies = () => {
   );
 
   return loading ? (
-    <Loader>
-      <ActivityIndicator />
-    </Loader>
+    <Loader />
   ) : (
     <FlatList
       onRefresh={onRefresh}
