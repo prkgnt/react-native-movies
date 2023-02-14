@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, ScrollView, FlatList, RefreshControl } from "react-native";
 import { useQuery, useQueryClient } from "react-query";
 import { tvApi } from "../api";
 import HList, { HListSeparator } from "../components/HList";
-import HMedia from "../components/HMedia";
 import Loader from "../components/loader";
 
 const Tv = () => {
@@ -29,9 +28,11 @@ const Tv = () => {
     return <Loader />;
   }
 
-  const refreshing = todayRefetching || topRefetching || trendingRefetching;
-  const onRefresh = () => {
-    queryClient.refetchQueries(["tv"]);
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await queryClient.refetchQueries(["tv"]);
+    setRefreshing(false);
   };
 
   return (

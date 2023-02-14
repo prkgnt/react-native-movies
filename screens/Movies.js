@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions, FlatList, View } from "react-native";
 import Swiper from "react-native-swiper";
 import { useQuery, useQueryClient } from "react-query";
@@ -50,10 +50,12 @@ const Movies = () => {
     isRefetching: isRefetchingTrending,
   } = useQuery(["movies", "trending"], moviesApi.trending);
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
-  const refreshing =
-    isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
+
+  const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
+    setRefreshing(true);
     queryClient.refetchQueries(["movies"]);
+    setRefreshing(false);
   };
   const renderVMedia = ({ item }) => (
     <VMedia

@@ -13,7 +13,7 @@ const ListTitle = styled.Text`
   margin-bottom: 10px;
 `;
 export const HListSeparator = styled.View`
-  width: 20;
+  width: 20px;
 `;
 const HList = ({ title, data }) => (
   <ListContainer>
