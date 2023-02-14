@@ -14,6 +14,13 @@ export const moviesApi = {
     fetch(
       `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&page=1&region=KR`
     ).then((res) => res.json()),
+  search: ({ queryKey }) => {
+    //queryKey에서 두번째 요소를 query에 저장
+    const [_, query] = queryKey;
+    return fetch(
+      `${BASE_URL}/search/movie?api_key=${API_KEY}&page=1&region=KR&query=${query}`
+    ).then((res) => res.json());
+  },
 };
 
 export const tvApi = {
@@ -29,4 +36,11 @@ export const tvApi = {
     fetch(`${BASE_URL}/tv/top_rated?api_key=${API_KEY}&page=1`).then((res) =>
       res.json()
     ),
+  search: ({ queryKey }) => {
+    //queryKey에서 두번째 요소를 query에 저장
+    const [_, query] = queryKey;
+    return fetch(
+      `${BASE_URL}/search/tv?api_key=${API_KEY}&page=1&region=KR&query=${query}`
+    ).then((res) => res.json());
+  },
 };

@@ -1,4 +1,6 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import makeImgPath from "../utils";
 
@@ -11,6 +13,16 @@ const Image = styled.Image`
 
 //props 넘길때는 소괄호 안에 중괄호 넣어주기!!!!!!!!!!!
 //(path) X -> ({path}) O
-const Poster = ({ path }) => <Image source={{ uri: makeImgPath(path) }} />;
+const Poster = ({ path }) => {
+  const navigation = useNavigation();
+  const goToDetail = () => {
+    navigation.navigate("Stack", { screen: "Detail" });
+  };
+  return (
+    <TouchableOpacity onPress={goToDetail}>
+      <Image source={{ uri: makeImgPath(path) }} />
+    </TouchableOpacity>
+  );
+};
 
 export default Poster;

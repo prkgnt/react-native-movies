@@ -24,9 +24,6 @@ const Tv = () => {
   } = useQuery(["tv", "trending"], tvApi.trending);
 
   const loading = todayLoading || topLoading || trendingLoading;
-  if (loading) {
-    return <Loader />;
-  }
 
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = async () => {
@@ -35,6 +32,11 @@ const Tv = () => {
     setRefreshing(false);
   };
 
+  //리턴문은 무조건 스테이트 변수 선언 후에 놓을것.
+  //안그러면 Rendered more hooks than during the previous render. 에러 남
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <ScrollView
       contentContainerStyle={{ paddingBottom: 30 }}

@@ -52,9 +52,9 @@ const Movies = () => {
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
 
   const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    queryClient.refetchQueries(["movies"]);
+    await queryClient.refetchQueries(["movies"]);
     setRefreshing(false);
   };
   const renderVMedia = ({ item }) => (
