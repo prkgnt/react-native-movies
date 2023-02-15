@@ -1,4 +1,6 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import Poster from "./poster";
 const HMovie = styled.View`
@@ -27,25 +29,31 @@ const Title = styled.Text`
   margin-bottom: 5px;
 `;
 const VMedia = ({ backdrop_path, original_title, release_date, overview }) => {
+  const navigation = useNavigation();
+  const goToDetail = () => {
+    navigation.navigate("Stack", { screen: "Detail", params: original_title });
+  };
   return (
-    <HMovie>
-      <Poster path={backdrop_path} />
-      <HColumn>
-        <Title>{original_title}</Title>
-        <Release>
-          {new Date(release_date).toLocaleDateString("ko", {
-            month: "long",
-            year: "numeric",
-            day: "numeric",
-          })}
-        </Release>
-        <Overview>
-          {overview !== "" && overview.length > 140
-            ? `${overview.slice(0, 140)}...`
-            : overview}
-        </Overview>
-      </HColumn>
-    </HMovie>
+    <TouchableOpacity onPress={goToDetail}>
+      <HMovie>
+        <Poster path={backdrop_path} />
+        <HColumn>
+          <Title>{original_title}</Title>
+          <Release>
+            {new Date(release_date).toLocaleDateString("ko", {
+              month: "long",
+              year: "numeric",
+              day: "numeric",
+            })}
+          </Release>
+          <Overview>
+            {overview !== "" && overview.length > 140
+              ? `${overview.slice(0, 140)}...`
+              : overview}
+          </Overview>
+        </HColumn>
+      </HMovie>
+    </TouchableOpacity>
   );
 };
 

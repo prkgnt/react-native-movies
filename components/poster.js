@@ -14,15 +14,7 @@ const Image = styled.Image`
 //props 넘길때는 소괄호 안에 중괄호 넣어주기!!!!!!!!!!!
 //(path) X -> ({path}) O
 const Poster = ({ path }) => {
-  const navigation = useNavigation();
-  const goToDetail = () => {
-    navigation.navigate("Stack", { screen: "Detail" });
-  };
-  return (
-    <TouchableOpacity onPress={goToDetail}>
-      <Image source={{ uri: makeImgPath(path) }} />
-    </TouchableOpacity>
-  );
+  return <Image source={{ uri: makeImgPath(path) }} />;
 };
 
 export default Poster;

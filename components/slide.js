@@ -1,9 +1,10 @@
 import React from "react";
-import { useColorScheme, View } from "react-native";
+import { TouchableOpacity, useColorScheme, View } from "react-native";
 import styled from "styled-components/native";
 import makeImgPath from "../utils";
 import { BlurView } from "@react-native-community/blur";
 import Poster from "./poster";
+import { useNavigation } from "@react-navigation/native";
 
 //다른 컴포넌트가 위에 오게 하려면 포지션 앱솔루트로 해야됨
 //그러면 flex 못 쓰니까 width, height 100% 줘야됨
@@ -47,6 +48,10 @@ const Slide = ({
   vote_average,
 }) => {
   const isDark = useColorScheme() === "dark";
+  const navigation = useNavigation();
+  const goToDetail = () => {
+    navigation.navigate("Stack", { screen: "Detail", params: original_title });
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -61,14 +66,16 @@ const Slide = ({
           //이렇게 안하고 StyleSheet.absoluteFill 쓰면 똑같은거 해줌
         }}
       >
-        <Wrapper>
-          <Poster path={poster_path} />
-          <Column>
-            <Title isDark={isDark}>{original_title}</Title>
-            <Overview isDark={isDark}>{overview.slice(0, 100)}...</Overview>
-            <Votes isDark={isDark}>🎖️ {vote_average}/10</Votes>
-          </Column>
-        </Wrapper>
+        <TouchableOpacity onPress={goToDetail}>
+          <Wrapper>
+            <Poster path={poster_path} />
+            <Column>
+              <Title isDark={isDark}>{original_title}</Title>
+              <Overview isDark={isDark}>{overview.slice(0, 100)}...</Overview>
+              <Votes isDark={isDark}>🎖️ {vote_average}/10</Votes>
+            </Column>
+          </Wrapper>
+        </TouchableOpacity>
       </BlurView>
     </View>
   );

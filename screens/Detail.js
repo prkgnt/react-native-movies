@@ -2,9 +2,13 @@ import React from "react";
 import { Text, View } from "react-native";
 import styled from "styled-components/native";
 
+const Container = styled.ScrollView`
+  background-color: ${(props) => props.theme.mainBGcolor};
+`;
+
 const Detail = () => (
-  <View>
+  <Container>
     <Text> Detail </Text>
-  </View>
+  </Container>
 );
 export default Detail;
