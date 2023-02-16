@@ -27,7 +27,7 @@ const HList = ({ title, data }) => (
       data={data}
       renderItem={({ item }) => (
         <HMedia
-          backdrop_path={item.poster_path}
+          poster_path={item.poster_path}
           // == item.original_title ? item.original_title : item.original_name
           original_title={item.original_title ?? item.original_name}
           vote_average={item.vote_average}

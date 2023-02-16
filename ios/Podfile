@@ -50,6 +50,7 @@ target 'noovies' do
       end
     end
   end
+  
 
   post_integrate do |installer|
     begin

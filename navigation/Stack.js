@@ -15,7 +15,7 @@ const Stack = () => {
           backgroundColor: isDark ? "#353535" : "white",
         },
         headerTitleStyle: {
-          color: isDark ? "gold" : "#353535",
+          color: isDark ? "white" : "#353535",
         },
       }}
     >

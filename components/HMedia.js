@@ -18,7 +18,7 @@ const Title = styled.Text`
   margin-bottom: 5px;
 `;
 
-const HMedia = ({ backdrop_path, original_title, vote_average, fullData }) => {
+const HMedia = ({ poster_path, original_title, vote_average, fullData }) => {
   const navigation = useNavigation();
   const goToDetail = () => {
     navigation.navigate("Stack", {
@@ -29,7 +29,7 @@ const HMedia = ({ backdrop_path, original_title, vote_average, fullData }) => {
   return (
     <TouchableOpacity onPress={goToDetail}>
       <Movie>
-        <Poster path={backdrop_path} />
+        <Poster path={poster_path} />
         <Title>
           {original_title.slice(0, 13)}
           {original_title.length > 13 ? "..." : null}

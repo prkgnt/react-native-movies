@@ -29,7 +29,7 @@ const Title = styled.Text`
   margin-bottom: 5px;
 `;
 const VMedia = ({
-  backdrop_path,
+  poster_path,
   original_title,
   release_date,
   overview,
@@ -45,7 +45,7 @@ const VMedia = ({
   return (
     <TouchableOpacity onPress={goToDetail}>
       <HMovie>
-        <Poster path={backdrop_path} />
+        <Poster path={poster_path} />
         <HColumn>
           <Title>{original_title}</Title>
           <Release>

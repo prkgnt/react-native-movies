@@ -59,7 +59,7 @@ const Movies = () => {
   };
   const renderVMedia = ({ item }) => (
     <VMedia
-      backdrop_path={item.backdrop_path}
+      poster_path={item.poster_path}
       original_title={item.original_title}
       release_date={item.release_date}
       overview={item.overview}
@@ -68,7 +68,7 @@ const Movies = () => {
   );
   const renderHMedia = ({ item }) => (
     <HMedia
-      backdrop_path={item.backdrop_path}
+      poster_path={item.poster_path}
       original_title={item.original_title}
       vote_average={item.vote_average}
       fullData={item}
