@@ -31,6 +31,7 @@ const HList = ({ title, data }) => (
           // == item.original_title ? item.original_title : item.original_name
           original_title={item.original_title ?? item.original_name}
           vote_average={item.vote_average}
+          fullData={item}
         />
       )}
     />

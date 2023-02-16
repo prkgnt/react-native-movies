@@ -63,6 +63,7 @@ const Movies = () => {
       original_title={item.original_title}
       release_date={item.release_date}
       overview={item.overview}
+      fullData={item}
     />
   );
   const renderHMedia = ({ item }) => (
@@ -70,6 +71,7 @@ const Movies = () => {
       backdrop_path={item.backdrop_path}
       original_title={item.original_title}
       vote_average={item.vote_average}
+      fullData={item}
     />
   );
 
@@ -99,6 +101,7 @@ const Movies = () => {
                 original_title={movie.original_title}
                 overview={movie.overview}
                 vote_average={movie.vote_average}
+                fullData={movie}
               />
             ))}
           </Swiper>

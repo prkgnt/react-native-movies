@@ -28,10 +28,19 @@ const Title = styled.Text`
   margin-top: 7px;
   margin-bottom: 5px;
 `;
-const VMedia = ({ backdrop_path, original_title, release_date, overview }) => {
+const VMedia = ({
+  backdrop_path,
+  original_title,
+  release_date,
+  overview,
+  fullData,
+}) => {
   const navigation = useNavigation();
   const goToDetail = () => {
-    navigation.navigate("Stack", { screen: "Detail", params: original_title });
+    navigation.navigate("Stack", {
+      screen: "Detail",
+      params: { ...fullData },
+    });
   };
   return (
     <TouchableOpacity onPress={goToDetail}>

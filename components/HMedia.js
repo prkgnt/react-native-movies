@@ -18,10 +18,13 @@ const Title = styled.Text`
   margin-bottom: 5px;
 `;
 
-const HMedia = ({ backdrop_path, original_title, vote_average }) => {
+const HMedia = ({ backdrop_path, original_title, vote_average, fullData }) => {
   const navigation = useNavigation();
   const goToDetail = () => {
-    navigation.navigate("Stack", { screen: "Detail", params: original_title });
+    navigation.navigate("Stack", {
+      screen: "Detail",
+      params: { ...fullData },
+    });
   };
   return (
     <TouchableOpacity onPress={goToDetail}>

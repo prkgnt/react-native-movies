@@ -46,11 +46,15 @@ const Slide = ({
   original_title,
   overview,
   vote_average,
+  fullData,
 }) => {
   const isDark = useColorScheme() === "dark";
   const navigation = useNavigation();
   const goToDetail = () => {
-    navigation.navigate("Stack", { screen: "Detail", params: original_title });
+    navigation.navigate("Stack", {
+      screen: "Detail",
+      params: { ...fullData },
+    });
   };
 
   return (
