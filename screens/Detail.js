@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+import { Linking } from "react-native";
 import styled from "styled-components/native";
 import Poster from "../components/poster";
 import makeImgPath from "../utils";
 import { LinearGradient } from "expo-linear-gradient";
 import { useQuery } from "react-query";
 import { moviesApi, tvApi } from "../api";
+import Loader from "../components/loader";
+import { Ionicons } from "@expo/vector-icons";
+import * as WebBrowser from "expo-web-browser";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -35,6 +39,20 @@ const OverView = styled.Text`
   color: white;
   margin: 20px;
 `;
+const VideoBtn = styled.TouchableOpacity`
+  flex-direction: row;
+`;
+//line-height 를 아이콘 크기에 맞추면 아이콘 크기에 맞춰서 정렬됨
+const BtnText = styled.Text`
+  color: white;
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  line-height: 24px;
+`;
+const Data = styled.View`
+  padding: 0px 20px;
+`;
 
 // 부모 오브젝트 안에 있는 자식 오브젝트를 꺼내 쓰려면
 //Parents : { Children } == Parents.Children
@@ -48,16 +66,19 @@ const Detail = ({
       title: "original_title" in params ? "Moive" : "TV Show",
     });
   }, []);
-  const { isLoading: movieLoading, data: movieData } = useQuery(
-    ["movies", params.id],
-    moviesApi.detail,
-    { enabled: "original_title" in params }
+
+  const isMovie = "original_title" in params;
+
+  const { isLoading, data } = useQuery(
+    [isMovie ? "movies" : "tv", params.id],
+    isMovie ? moviesApi.detail : tvApi.detail
   );
-  const { isLoading: tvLoading, data: tvData } = useQuery(
-    ["tv", params.id],
-    tvApi.detail,
-    { enabled: "original_name" in params }
-  );
+
+  const openYTLink = async (videoID) => {
+    const baseUrl = `http://m.youtube.com/watch?v=${videoID}`;
+    await WebBrowser.openBrowserAsync(baseUrl);
+    //await Linking.openURL(baseUrl);
+  };
   return (
     <Container>
       <Header>
@@ -80,6 +101,18 @@ const Detail = ({
         </Column>
       </Header>
       <OverView>{params.overview}</OverView>
+      {isLoading ? <Loader /> : null}
+      <Data>
+        {/* 변수명? 는 해당 변수가 없을 시 생략하라는 뜻*/}
+        {data?.videos?.results?.map((video) => (
+          //콜백함수에 인자를 넘겨줘야 하는 경우 화살표 함수 안에 넣기
+          //리액트 콜백함수 매개변수 전달 이라고 구글에 검색
+          <VideoBtn key={video.key} onPress={() => openYTLink(video.key)}>
+            <Ionicons name="logo-youtube" color="white" size={24}></Ionicons>
+            <BtnText>{video.name}</BtnText>
+          </VideoBtn>
+        ))}
+      </Data>
     </Container>
   );
 };
