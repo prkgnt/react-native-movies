@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  Share,
+  Platform,
+} from "react-native";
 import { Linking } from "react-native";
 import styled from "styled-components/native";
 import Poster from "../components/poster";
@@ -61,12 +67,6 @@ const Detail = ({
   navigation: { setOptions },
   route: { params },
 }) => {
-  useEffect(() => {
-    setOptions({
-      title: "original_title" in params ? "Moive" : "TV Show",
-    });
-  }, []);
-
   const isMovie = "original_title" in params;
 
   const { isLoading, data } = useQuery(
@@ -74,11 +74,58 @@ const Detail = ({
     isMovie ? moviesApi.detail : tvApi.detail
   );
 
+  const shareMedia = async () => {
+    const isAndroid = Platform.OS === "android";
+    const homepage = isMovie
+      ? `https://www.imdb.com/title/${data.imdb_id}`
+      : data.homepage;
+    if (isAndroid) {
+      await Share.share({
+        message: `${params.overview} /n Check It Out: ${homepage}`,
+        title:
+          "original_title" in params
+            ? params.original_title
+            : params.original_name,
+      });
+    } else {
+      await Share.share({
+        url: homepage,
+        title:
+          "original_title" in params
+            ? params.original_title
+            : params.original_name,
+      });
+    }
+  };
+
+  const ShareButton = () => (
+    <TouchableOpacity onPress={shareMedia}>
+      <Ionicons name="share-outline" color="white" size={24}></Ionicons>
+    </TouchableOpacity>
+  );
+
+  useEffect(() => {
+    setOptions({
+      title: "original_title" in params ? "Moive" : "TV Show",
+      //여기에 ShareButton을 넣으면 앱이 시작할 때 헤더를 렌더링 하므로 이 시점에서는 data가 존재하지 않음
+      //그래서 에러가 나게됨
+      headerRight: () => <ShareButton />,
+    });
+  }, []);
+
+  //그래서 data값이 변경될때 새로 렌더링 하도록 useEffect 추가
+  useEffect(() => {
+    setOptions({
+      headerRight: () => <ShareButton />,
+    });
+  }, [data]);
+
   const openYTLink = async (videoID) => {
     const baseUrl = `http://m.youtube.com/watch?v=${videoID}`;
     await WebBrowser.openBrowserAsync(baseUrl);
     //await Linking.openURL(baseUrl);
   };
+
   return (
     <Container>
       <Header>
