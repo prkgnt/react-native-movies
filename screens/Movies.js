@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Dimensions, FlatList, View } from "react-native";
+import { Alert, Dimensions, FlatList, View } from "react-native";
 import Swiper from "react-native-swiper";
-import { useQuery, useQueryClient } from "react-query";
+import { useInfiniteQuery, useQuery, useQueryClient } from "react-query";
 import styled from "styled-components/native";
 import { moviesApi } from "../api";
 import HMedia from "../components/HMedia";
@@ -43,7 +43,15 @@ const Movies = () => {
     isLoading: upcomingLoading,
     data: upcomingData,
     isRefetching: isRefetchingUpcoming,
-  } = useQuery(["movies", "upcoming"], moviesApi.upcoming);
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery(["movies", "upcoming"], moviesApi.upcoming, {
+    getNextPageParam: (currentPage) => {
+      const nextPage = currentPage.page + 1;
+      return nextPage > currentPage.total_pages ? null : nextPage;
+    },
+  });
+
   const {
     isLoading: trendingLoading,
     data: trendingData,
@@ -75,10 +83,18 @@ const Movies = () => {
     />
   );
 
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
   return loading ? (
     <Loader />
   ) : (
     <FlatList
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.5}
       onRefresh={onRefresh}
       refreshing={refreshing}
       //하나의 플랫리스트 위에 여러 컴포넌트를 올려놓을 수 있음
@@ -126,7 +142,10 @@ const Movies = () => {
       contentContainerStyle={{ paddingBottom: 30 }}
       ItemSeparatorComponent={() => <View style={{ height: 30 }} />}
       keyExtractor={(item) => item.id + ""}
-      data={upcomingData.results}
+      //flat()을 쓰면 배열 안에 배열을 그냥 배열로 바꿔줌
+      //[[movie], [movie], [movie], [movie], [movie]].flat()
+      //== [movie, movie, movie, movie, movie, movie]
+      data={upcomingData.pages.map((page) => page.results).flat()}
       renderItem={renderVMedia}
     />
   );

@@ -6,10 +6,10 @@ export const moviesApi = {
     fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}&page=1`).then(
       (res) => res.json()
     ),
-  upcoming: () =>
-    fetch(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}&page=1`).then((res) =>
-      res.json()
-    ),
+  upcoming: ({ pageParam }) =>
+    fetch(
+      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&page=${pageParam}`
+    ).then((res) => res.json()),
   nowPlaying: () =>
     fetch(
       `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&page=1&region=KR`

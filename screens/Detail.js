@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Share,
   Platform,
+  Alert,
 } from "react-native";
 import { Linking } from "react-native";
 import styled from "styled-components/native";
