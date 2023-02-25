@@ -1,16 +1,26 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useColorScheme } from "react-native";
+import { Text, TouchableOpacity, useColorScheme } from "react-native";
+import styled from "styled-components/native";
 import Movies from "../screens/Movies";
 import Tv from "../screens/Tv";
 import Search from "../screens/Search";
 import { Ionicons } from "@expo/vector-icons";
 import Stack from "./Stack";
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
+const MoiveButton = styled.TouchableOpacity``;
+const MoiveText = styled.Text`
+  color: gray;
+`;
+
 const Tabs = () => {
+  var scrollUp = false;
   const isDark = useColorScheme() === "dark";
+  const navigation = useNavigation();
+
   return (
     <Tab.Navigator
       //sceneContainerStyle == 전체 뷰의 스타일
@@ -40,9 +50,19 @@ const Tabs = () => {
         name="Movies"
         component={Movies}
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name="film-outline" color={color} size={size}></Ionicons>
-          ),
+          tabBarIcon: ({ color, size }) => {
+            const goToMovie = () => {
+              navigation.navigate("Movies");
+            };
+            return (
+              <Ionicons
+                onPress={goToMovie}
+                name="film-outline"
+                color={color}
+                size={size}
+              ></Ionicons>
+            );
+          },
         }}
       />
       <Tab.Screen
@@ -58,13 +78,15 @@ const Tabs = () => {
         name="Search"
         component={Search}
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons
-              name={focused ? "search" : "search-outline"}
-              color={color}
-              size={size}
-            ></Ionicons>
-          ),
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <Ionicons
+                name={focused ? "search" : "search-outline"}
+                color={color}
+                size={size}
+              ></Ionicons>
+            );
+          },
         }}
       />
     </Tab.Navigator>

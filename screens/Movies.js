@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import React, { useRef, useState } from "react";
 import { Alert, Dimensions, FlatList, View } from "react-native";
 import Swiper from "react-native-swiper";
 import { useInfiniteQuery, useQuery, useQueryClient } from "react-query";
@@ -8,6 +9,8 @@ import HMedia from "../components/HMedia";
 import Loader from "../components/loader";
 import Slide from "../components/slide";
 import VMedia from "../components/VMedia";
+import { useIsFocused } from "@react-navigation/native";
+import { useScrollToTop } from "@react-navigation/native";
 
 const ListContainer = styled.View``;
 
@@ -32,7 +35,9 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 // == const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const Movies = () => {
+  const flatRef = React.useRef();
   const queryClient = useQueryClient();
+  //console.log(params.params);
 
   const {
     isLoading: nowPlayingLoading,
@@ -43,8 +48,8 @@ const Movies = () => {
     isLoading: upcomingLoading,
     data: upcomingData,
     isRefetching: isRefetchingUpcoming,
-    hasNextPage,
-    fetchNextPage,
+    hasNextPage: upcomingHasNextPage,
+    fetchNextPage: upcomingFetchNextPage,
   } = useInfiniteQuery(["movies", "upcoming"], moviesApi.upcoming, {
     getNextPageParam: (currentPage) => {
       const nextPage = currentPage.page + 1;
@@ -56,7 +61,14 @@ const Movies = () => {
     isLoading: trendingLoading,
     data: trendingData,
     isRefetching: isRefetchingTrending,
-  } = useQuery(["movies", "trending"], moviesApi.trending);
+    hasNextPage: trendingHasNextPage,
+    fetchNextPage: trendingFetchNextPage,
+  } = useInfiniteQuery(["movies", "trending"], moviesApi.trending, {
+    getNextPageParam: (currentPage) => {
+      const nextPage = currentPage.page + 1;
+      return nextPage > currentPage.total_pages ? null : nextPage;
+    },
+  });
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
 
   const [refreshing, setRefreshing] = useState(false);
@@ -83,18 +95,30 @@ const Movies = () => {
     />
   );
 
-  const loadMore = () => {
-    if (hasNextPage) {
-      fetchNextPage();
+  const upcomingLoadMore = () => {
+    if (upcomingHasNextPage) {
+      upcomingFetchNextPage();
     }
   };
+
+  const trendingLoadMore = () => {
+    if (trendingHasNextPage) {
+      trendingFetchNextPage();
+    }
+  };
+  const isFocused = useIsFocused();
+
+  if (isFocused == true) {
+    useScrollToTop(flatRef);
+  }
 
   return loading ? (
     <Loader />
   ) : (
     <FlatList
-      onEndReached={loadMore}
-      onEndReachedThreshold={0.5}
+      ref={flatRef}
+      onEndReached={upcomingLoadMore}
+      onEndReachedThreshold={1}
       onRefresh={onRefresh}
       refreshing={refreshing}
       //하나의 플랫리스트 위에 여러 컴포넌트를 올려놓을 수 있음
@@ -125,6 +149,7 @@ const Movies = () => {
           <ListContainer>
             <ListTitle>Trending Movie</ListTitle>
             <TrendingScroll
+              onEndReached={trendingLoadMore}
               horizontal
               contentContainerStyle={{ paddingLeft: 30, paddingRight: 30 }}
               showsHorizontalScrollIndicator={false}
@@ -132,7 +157,7 @@ const Movies = () => {
               //이걸로 item을 받아와서 item.id를 키로 할당함
               //string 형이여야 하므로 item.id + "" 으로 인트형 -> 스트링형으로 변환
               keyExtractor={(item) => item.id + ""}
-              data={trendingData.results}
+              data={trendingData.pages.map((page) => page.results).flat()}
               renderItem={renderHMedia}
             />
           </ListContainer>
