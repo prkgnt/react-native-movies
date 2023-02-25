@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, Dimensions, FlatList, View } from "react-native";
 import Swiper from "react-native-swiper";
 import { useInfiniteQuery, useQuery, useQueryClient } from "react-query";
@@ -9,7 +9,6 @@ import HMedia from "../components/HMedia";
 import Loader from "../components/loader";
 import Slide from "../components/slide";
 import VMedia from "../components/VMedia";
-import { useIsFocused } from "@react-navigation/native";
 import { useScrollToTop } from "@react-navigation/native";
 
 const ListContainer = styled.View``;
@@ -34,10 +33,9 @@ const HMovie = styled.View``;
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 // == const SCREEN_HEIGHT = Dimensions.get("window").height;
 
-const Movies = () => {
+const Movies = ({ navigation }) => {
   const flatRef = React.useRef();
   const queryClient = useQueryClient();
-  //console.log(params.params);
 
   const {
     isLoading: nowPlayingLoading,
@@ -106,9 +104,11 @@ const Movies = () => {
       trendingFetchNextPage();
     }
   };
-  const isFocused = useIsFocused();
 
-  if (isFocused == true) {
+  //navigation에 isFocused가 기본으로 들어옴
+  const { isFocused } = navigation;
+
+  if (isFocused) {
     useScrollToTop(flatRef);
   }
 
